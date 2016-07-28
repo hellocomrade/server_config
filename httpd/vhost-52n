@@ -1,0 +1,44 @@
+<VirtualHost 12.34.567.89:80>
+
+  DocumentRoot /var/www/html/abc
+  #ServerName   abc.def.com
+
+  RewriteEngine  on
+
+  ProxyRequests Off
+#  <Proxy *>
+#    Order deny,allow
+#    Allow from all
+#  </Proxy>
+  ProxyPreserveHost On
+
+  # 52N
+  RewriteRule      ^/$  52n/  [R]
+  RewriteRule      ^/52n$  52n/  [R]
+  ProxyPass        /abc/ http://localhost:8083/abc/
+  ProxyPassReverse /abc/ http://localhost:8083/abc/
+
+  ProxyTimeout 240
+
+
+  <Proxy /metadata>
+    Order Deny,Allow
+    Deny from all
+    Allow from 192.168.76.104
+  </Proxy>
+
+  ProxyPass /metadata http://localhost:8081/metadata
+  ProxyPassReverse /metadata http://localhost:8081/metadata
+  ProxyPass /geoserver http://localhost:8081/geoserver
+  ProxyPassReverse /geoserver http://localhost:8081/geoserver
+
+  <Proxy /glcfs>
+    Order Deny,Allow
+    Deny from all
+    Allow from 192.168.76.104
+  </Proxy>
+
+  ProxyPass /glcfs http://localhost:8082/glcfs
+  ProxyPassReverse /glcfs http://localhost:8082/glcfs
+
+</VirtualHost>
