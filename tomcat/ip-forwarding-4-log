@@ -1,0 +1,4 @@
+<!--In server.xml-->
+<Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log." suffix=".txt"
+               pattern="%{X-Forwarded-For}i %l %u %t %r %s %b %{User-Agent}i %{Referer}i" resolveHosts="false"/>
