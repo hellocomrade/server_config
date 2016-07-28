@@ -1,0 +1,21 @@
+ServerSignature off
+ServerTokens Prod
+#disable TRACE
+TraceEnable off
+
+<Proxy /metadata>
+Order Deny,Allow
+Deny from all
+Allow from 192.168.76.104
+</Proxy>
+
+ProxyPass /metadata http://localhost:8081/metadata
+ProxyPassReverse /metadata http://localhost:8081/metadata
+ProxyPass /geoserver http://localhost:8081/geoserver
+ProxyPassReverse /geoserver http://localhost:8081/geoserver
+ProxyPass /glcfs http://localhost:8082/glcfs
+ProxyPassReverse /glcfs http://localhost:8082/glcfs
+#ProxyPass /geonetwork-old http://localhost:8082/geonetwork-old
+#ProxyPassReverse /geonetwork-old http://localhost:8082/geonetwork-old
+#ProxyPass /52n http://localhost:8083/52n
+#ProxyPassReverse /52n http://localhost:8083/52n
