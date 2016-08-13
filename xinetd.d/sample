@@ -1,0 +1,13 @@
+service abcsample
+{
+    disable = no
+    socket_type = stream
+    protocol = tcp
+    user = hellocomrade
+    wait = no
+    server = /usr/local/abc/script/sample.sh
+#    log_on_failure  +=HOST
+    instances = 1
+    bind = 192.168.176.104
+    only_from = 192.168.176.131
+}
