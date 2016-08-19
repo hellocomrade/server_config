@@ -1,3 +1,4 @@
+#Should named setenv.sh under tomcat_instance_root/bin 
 #!/bin/sh
 #
 #ulimit -n 2048
