@@ -1,0 +1,74 @@
+#!/bin/bash
+#
+# Startup script for Tomcat
+#
+# chkconfig: 345 81 16
+# description: Tomcat jakarta JSP server
+
+# Set up the path to CATALINA_HOME (base of Tomcat)
+# and CATALINA_BASE (base of instance)
+CATALINA_BASE="/var/lib/tomcat/applications/app_root"
+CATALINA_HOME="/var/lib/tomcat/tomcat7"
+CATALINA_TARGET=`readlink -f $CATALINA_BASE`
+
+# Name the application
+NAME=`basename $CATALINA_BASE`
+NAME=${NAME^^}
+
+if [ ! -f $CATALINA_HOME/bin/catalina.sh ]
+then
+echo "$NAME not available..."
+exit
+fi
+
+
+start() {
+PID=`ps ax --width=1000 | grep "[o]rg.apache.catalina.startup.Bootstrap start" | grep $CATALINA_TARGET | awk '{printf $1 " "}' | wc | awk '{print $2}'`
+if [ $PID -gt 0 ]; then
+  echo "Waiting for $NAME to stop..."
+  sleep 1
+  start
+else
+  echo -n -e '\E[0;0m'"\033[1;32mStarting $NAME: \033[0m \n"
+  su -l tomcat -s /bin/bash -c "CATALINA_BASE=$CATALINA_TARGET $CATALINA_HOME/bin/daemon.sh start"
+  echo
+  touch /var/lock/subsys/tomcat-$NAME
+  sleep 3
+fi
+}
+stop() {
+echo -n -e '\E[0;0m'"\033[1;31mShutting down $NAME: \033[m \n"
+su -l tomcat -s /bin/bash -c "CATALINA_BASE=$CATALINA_TARGET $CATALINA_HOME/bin/daemon.sh stop"
+rm -f /var/lock/subsys/tomcat-$NAMEecho
+}
+
+status() {
+SPID=`ps ax --width=1000 | grep "[o]rg.apache.catalina.startup.Bootstrap start" | grep $CATALINA_TARGET | awk '{printf $1 " "}' | wc | awk '{print $2}'`
+if [ $SPID -gt 0 ]; then
+echo -n "$NAME ( pid "
+ps ax --width=1000 | grep "[o]rg.apache.catalina.startup.Bootstrap start" | grep $CATALINA_TARGET | awk '{printf $1 " "}'
+echo -n ") is running..."
+echo
+else
+echo "$NAME is stopped"
+fi
+}
+
+case "$1" in
+start)
+start
+;;
+stop)
+stop
+;;
+restart)
+stop
+start
+;;
+status)
+status
+;;
+*)
+echo "Usage: tomcat_$NAME {start|stop|restart|status}"
+exit 1
+esac
