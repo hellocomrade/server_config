@@ -1,0 +1,8 @@
+#I saw a uri at http://example.com/abc/def/wms on a server I set up before
+#But this wms file actually doesn't exist
+#it took me 10 minutes to realize the fact there is a .htaccess under def folder
+#which has a rewrite rule...
+Options +FollowSymlinks
+Options -Indexes
+RewriteEngine on
+RewriteRule ^wms$ /cgi-bin/ms_hecwfs
